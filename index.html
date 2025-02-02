@@ -3,56 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afficher un modèle 3D</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/loaders/GLTFLoader.min.js"></script>
+    <script type="importmap">
+		{
+			"imports": {
+			"three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+			"three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
+			"tween": "https://unpkg.com/@tweenjs/tween.js@^20.0.0/dist/tween.umd.js",
+			"tween2": "https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"
+			}
+		}
+	</script>
 </head>
 <body>
     <h1>Mon modèle 3D dans Three.js</h1>
-    <div id="three-container" style="width: 100%; height: 500px;"></div>
+    <div id="three-container" style="width: 100%; height: 100vh;"></div>
 
-    <script>
-        // Initialisation de la scène Three.js
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB); // bleu ciel
-
-        // Initialisation de la caméra
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-        // Initialisation du renderer et ajout au DOM
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('three-container').appendChild(renderer.domElement); // Attach the renderer to the container
-
-        // Charger le modèle 3D GLTF
-        const loader = new THREE.GLTFLoader();
-        loader.load('sofa.glb', (gltf) => {
-            scene.add(gltf.scene);
-            gltf.scene.scale.set(1, 1, 1); // Ajuste l'échelle si nécessaire
-            gltf.scene.position.set(0, 0, 0); // Position du modèle
-        });
-
-        // Positionner la caméra
-        camera.position.z = 5;
-
-        // Fonction d'animation
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Vous pouvez ajouter des rotations ou des animations ici si vous le souhaitez
-            // gltf.scene.rotation.x += 0.01;
-            // gltf.scene.rotation.y += 0.01;
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // Gestion du redimensionnement de la fenêtre
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
