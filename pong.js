@@ -5,19 +5,42 @@ function initPongGame() {
 
     // Utilisation de la section #choix-PONG pour le rendu
     renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
-    renderer.setClearColor(0x222222, 0); // Fond gris foncé
+    
+    // Définir un fond bleu pour la scène
+    scene.background = new THREE.Color(0x161a22); // Bleu
+
+    const loader = new THREE.TextureLoader();
+    loader.load('textures/stardust.png', function(texture) {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1, 1);
+
+        // Création du matériau avec transparence
+        const material = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true, // Active la transparence si l'image a un fond noir
+        });
+
+        // Création du plan qui affichera la texture
+        const geometry = new THREE.PlaneGeometry(20, 20);
+        const background = new THREE.Mesh(geometry, material);
+        background.position.set(0, 0, -10); // Place le plan en arrière-plan
+        scene.add(background);
+    });
+
+    let gameOver = false; // Variable pour stopper le jeu une seule fois
 
     // Trouver la section PONG et y ajouter le renderer
     const pongSection = document.getElementById('choix-PONG');
     pongSection.appendChild(renderer.domElement);
 
     // Position de la caméra (légèrement inclinée pour une meilleure vue)
-    // camera.position.set(0, 6, 10);
-    camera.position.set(0, 10, 0);
+    camera.position.set(0, 6, 10);
+    // camera.position.set(0, 10, 0);
     camera.lookAt(0, 0, 0);
 
     // Plateau (plus large)
-    const plateGeometry = new THREE.BoxGeometry(12, 0.5, 6);
+    const plateGeometry = new THREE.BoxGeometry(12, 0.35, 6);
     const plateMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
     plate.position.set(0, 0, 0);
@@ -33,9 +56,16 @@ function initPongGame() {
         scoreBoard.innerHTML = `Player 1 ${player1Score} : ${player2Score} Player 2 `;
     }
 
+    function resetScore()
+    {
+        player1Score = 0;
+        player2Score = 0;
+        updateScore();
+    }
+
     // Bordures horizontales (haut/bas) en rouge
     const bordHGeometry = new THREE.BoxGeometry(12, 0.5, 0.5);
-    const bordHMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+    const bordHMaterial = new THREE.MeshStandardMaterial({ color: 0x434788 });
 
     const bordHaut = new THREE.Mesh(bordHGeometry, bordHMaterial);
     bordHaut.position.set(0, 0.5, 3.25);
@@ -44,18 +74,6 @@ function initPongGame() {
     const bordBas = new THREE.Mesh(bordHGeometry, bordHMaterial);
     bordBas.position.set(0, 0.5, -3.25);
     scene.add(bordBas);
-
-    // Bordures verticales (gauche/droite) en bleu
-    const bordVGeometry = new THREE.BoxGeometry(0.5, 0.5, 6);
-    const bordVMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
-
-    const bordGauche = new THREE.Mesh(bordVGeometry, bordVMaterial);
-    bordGauche.position.set(-6.25, 0.5, 0);
-    scene.add(bordGauche);
-
-    const bordDroit = new THREE.Mesh(bordVGeometry, bordVMaterial);
-    bordDroit.position.set(6.25, 0.5, 0);
-    scene.add(bordDroit);
 
     // Lumières
     const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
@@ -78,13 +96,13 @@ function initPongGame() {
 
     // Création des paddles
     const paddleLG = new THREE.BoxGeometry(0.1, 0.5, 1.5);
-    const paddleLM = new THREE.MeshStandardMaterial({ color: 0xff000 });
+    const paddleLM = new THREE.MeshStandardMaterial({ color: 0x6478ff });
     const paddleLeft = new THREE.Mesh(paddleLG, paddleLM);
     paddleLeft.position.set(-5.5, 0.5, 0);
     scene.add(paddleLeft);
 
     const paddleRG = new THREE.BoxGeometry(0.1, 0.5, 1.5);
-    const paddleRM = new THREE.MeshStandardMaterial({ color: 0xff000 });
+    const paddleRM = new THREE.MeshStandardMaterial({ color: 0x6478ff });
     const paddleRight = new THREE.Mesh(paddleRG, paddleRM);
     paddleRight.position.set(5.5, 0.5, 0);
     scene.add(paddleRight);
@@ -107,10 +125,42 @@ function initPongGame() {
         if (event.key === 'ArrowUp' || event.key === 'ArrowDown') paddleRightSpeed = 0;
     });
     
+    // Condition Victoire
+    function checkWin()
+    {
+        if (player1Score === 3)
+        {
+            gameOver = true; // Empêche que cela se répète
+            document.getElementById('choix-jeu').style.display = 'block'; // Affiche la section
+            document.getElementById('choix-PONG').style.display = 'none'; // Cache le jeu
+            resetScore();
+            return true; // Stopper l'animation
+        }
+        if (player2Score === 3)
+        {
+            gameOver = true; // Empêche que cela se répète
+            document.getElementById('choix-jeu').style.display = 'block'; // Affiche la section
+            document.getElementById('choix-PONG').style.display = 'none'; // Cache le jeu
+            resetScore();
+            return true; // Stopper l'animation
+        }
+        return false;
+    }
+
     // Animation
     function animate()
     {
-        requestAnimationFrame(animate);
+        if (!gameOver)
+        {
+            requestAnimationFrame(animate);
+        }
+
+        if (checkWin())
+        {
+            // gameOver = false;
+            return ;
+        }
+
         // Déplacer la balle
         ball.position.add(ballVelocity);
 
@@ -167,4 +217,18 @@ function initPongGame() {
     animate();
 }
 
-initPongGame();
+document.getElementById('button-commencer').addEventListener('click', () => {
+    // Affichez la section du jeu
+    const pongSection = document.getElementById('choix-PONG');
+    pongSection.style.display = 'block';
+  
+    // Supprimer uniquement le canvas existant, s'il existe
+    const existingCanvas = pongSection.querySelector('canvas');
+    if (existingCanvas) {
+      pongSection.removeChild(existingCanvas);
+    }
+  
+    // Démarrer le jeu en créant un nouveau canvas
+    initPongGame();
+  });
+  

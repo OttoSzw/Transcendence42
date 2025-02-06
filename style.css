@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(22, 26, 34);
+    background-color: #161a22;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,7 +19,7 @@ body {
 
 .content {
     padding: 60px;
-    background-color: rgb(67, 71, 136);
+    background-color: #434788;
     border-radius: 20px;
     box-shadow: 0 6px 25px rgba(137, 165, 255, 0.6);
     text-align: center;
@@ -121,7 +121,7 @@ button:hover {
 /* Effet de survol sur le bouton (agrandissement et changement de couleur) */
 #choix button:hover {
     transform: scale(1.1); /* Agrandir légèrement le bouton */
-    background-color: rgb(100, 120, 255);
+    background-color: #6478ff;
 }
 
 /* Style pour le bouton Retour */
@@ -171,3 +171,5 @@ button:hover {
     font-size: 30px;
     color: white;
 }
+
+  
