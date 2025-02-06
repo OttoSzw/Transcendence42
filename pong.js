@@ -146,6 +146,7 @@ function initPongGame() {
         }
         return false;
     }
+    
 
     // Animation
     function animate()

@@ -17,6 +17,32 @@ body {
     z-index: -1;
 }
 
+
+.intro {
+    padding: 60px;
+    background-color: #434788;
+    border-radius: 20px;
+    box-shadow: 0 6px 25px rgba(137, 165, 255, 0.6);
+    text-align: center;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.intro h1 {
+    font-size: 40px;
+    color: aliceblue;
+    margin-bottom: 25px;
+}
+
+.intro p {
+    font-size: 18px;
+    color: aliceblue;
+    margin-bottom: 40px;
+}
+
 .content {
     padding: 60px;
     background-color: #434788;
@@ -97,7 +123,7 @@ button:hover {
 }
 
 /* Style général des boutons */
-#choix button {
+.content button {
     padding: 30px;
     font-family: 'Press Start 2P', cursive;
     background-color: aliceblue;
@@ -113,13 +139,13 @@ button:hover {
 }
 
 /* Affichage du texte dans le span au survol du bouton */
-#choix button:hover .info-comment {
+.content button:hover .info-comment {
     opacity: 1; /* Afficher le texte avec une transition d'opacité */
     margin-top: 5px;
 }
 
 /* Effet de survol sur le bouton (agrandissement et changement de couleur) */
-#choix button:hover {
+.content button:hover {
     transform: scale(1.1); /* Agrandir légèrement le bouton */
     background-color: #6478ff;
 }
@@ -140,28 +166,6 @@ button:hover {
 #button-retour:hover {
     background-color: #1f1d83;
 }
-
-/* Style pour le bouton Commencer (celui que tu veux plus grand et avec le dégradé) */
-#button-commencer {
-    padding: 30px;
-    font-family: 'Press Start 2P', cursive;
-    background-color: aliceblue;
-    background-image: linear-gradient(45deg, #7379d867, #3b2db6); /* Dégradé de couleurs */
-    font-size: 22px;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* Hover pour le bouton Commencer */
-#button-commencer:hover {
-    transform: scale(1.1); /* Agrandir légèrement le bouton */
-}
-
 
 #scoreBoard {
     position: absolute;
