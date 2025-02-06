@@ -3,21 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="importmap">
-		{
-			"imports": {
-			"three": "https://unpkg.com/three@0.161.0/build/three.module.js",
-			"three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/",
-			"tween": "https://unpkg.com/@tweenjs/tween.js@^20.0.0/dist/tween.umd.js",
-			"tween2": "https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"
-			}
-		}
-	</script>
+    <title>Inscription</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 </head>
 <body>
-    <h1>Mon modèle 3D dans Three.js</h1>
-    <div id="three-container" style="width: 100%; height: 100vh;"></div>
 
-    <script type="module" src="app.js"></script>
+    <div class="stars"></div>
+
+    <!-- Section de connexion -->
+    <div class="content" id="connexion">
+        <h1>Bienvenue</h1>
+        <p>Avant de commencer ton aventure avec nous, crée un compte !</p>
+
+        <form action="#" method="POST">
+            <input type="text" name="pseudo" placeholder="Pseudo" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <input type="password" name="confirm_password" placeholder="Confirme ton mot de passe" required>
+            <button type="submit">Se connecter</button>
+        </form>
+        <!-- Ajout du bouton pour aller plus vite -->
+        <button type="button" id="raccourcis" >Pour aller plus vite</button>
+    </div>
+
+    <!-- Section avec choix après la connexion -->
+    <div class="content" id="choix" style="display: none;">
+        <h1>Menu</h1>
+        <div class="choices">
+            <button type="button" id="button-jeu">
+                Jouer <br><span class="info-comment"> (Cliquez ici pour commencer à jouer)</span>
+            </button>
+            
+            <button type="button" id="button-compte">
+                Mon Compte <br><span class="info-comment"> (Accédez à vos informations personnelles)</span>
+            </button>
+            
+            <button type="button" id="button-social">
+                Social <br><span class="info-comment"> (Interagissez avec les autres utilisateurs)</span>
+            </button>
+            
+        </div>
+    </div>
+
+    <!-- Section de Jeu -->
+     <div class="content" id="choix-jeu">
+        <button onclick="showSection('choix')" id="button-retour">Retour</button>
+        <h1>Jouer</h1>
+        <p>ARGHHHHHHHHHH!!!!!!!</p>
+        <button onclick="showSection('choix-PONG')" id="button-commencer">Commencer</button>
+     </div>
+
+     <!-- Section de Compte -->
+     <div class="content" id="choix-compte">
+        <button onclick="showSection('choix')" id="button-retour">Retour</button>
+        <h1>Mon Compte</h1>
+     </div>
+
+     <!-- Section de Social -->
+     <div class="content" id="choix-social">
+        <button onclick="showSection('choix')" id="button-retour">Retour</button>
+        <h1>Social</h1>
+     </div>
+
+     <!-- Section PONG -->
+    <div class="gameplay" id="choix-PONG">
+        <!-- Div pour afficher le score -->
+        <div id="scoreBoard">
+            Player 1 0 : 0 Player 2
+        </div>
+    </div>
+     
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script>
+    <script src="pong.js"></script>
 </body>
 </html>
