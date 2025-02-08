@@ -1,4 +1,5 @@
 let ia = false;  // Variable pour activer/désactiver l'IA
+let iaErrorProbability = 0.2; // 50% de chance de rater
 
 function initPongGame() {
     const scene = new THREE.Scene();
@@ -208,17 +209,26 @@ function initPongGame() {
 
         // Déplacer les paddles
         paddleLeft.position.z += paddleLeftSpeed;
-        if (ia) {
-            // L'IA suit la balle sur l'axe Z (verticaux)
-            if (ball.position.z > paddleRight.position.z + 0.5)
-            {
-                paddleRight.position.z += paddleMaxSpeed;
+        if (ia)
+        {
+            if (Math.random() > iaErrorProbability) {
+                // L'IA suit normalement la balle
+                if (ball.position.z > paddleRight.position.z + 0.5) {
+                    paddleRight.position.z += paddleMaxSpeed;
+                } else if (ball.position.z < paddleRight.position.z - 0.5) {
+                    paddleRight.position.z -= paddleMaxSpeed;
+                }
+            } else {
+                // L'IA fait une erreur en réagissant mal
+                if (ball.position.z > paddleRight.position.z + 0.5) {
+                    paddleRight.position.z -= paddleMaxSpeed; // Mauvais mouvement
+                } else if (ball.position.z < paddleRight.position.z - 0.5) {
+                    paddleRight.position.z += paddleMaxSpeed; // Mauvais mouvement
+                }
             }
-            else if (ball.position.z < paddleRight.position.z - 0.5)
-            {
-                paddleRight.position.z -= paddleMaxSpeed;
-            }
-        } else {
+        }
+        else
+        {
             // Mouvement contrôlé par l'utilisateur si l'IA est désactivée
             paddleRight.position.z += paddleRightSpeed;
         }
