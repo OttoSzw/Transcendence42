@@ -2,6 +2,7 @@ let ia = false;  // Variable pour activer/désactiver l'IA
 let iaErrorProbability = 0.2; // 50% de chance de rater
 let lastIaUpdate = Date.now();
 let speedFactor = 5; // Facteur pour compenser le délai
+var isTournament = false; // Indique si un tournoi est en cours
 
 function initPongGame() {
     const scene = new THREE.Scene();
@@ -133,21 +134,44 @@ function initPongGame() {
     // Condition Victoire
     function checkWin()
     {
-        if (player1Score === 3)
+        console.log(isTournament);
+        if (isTournament == false)
         {
-            gameOver = true; // Empêche que cela se répète
-            document.getElementById('choix-jeu').style.display = 'block'; // Affiche la section
-            document.getElementById('choix-PONG').style.display = 'none'; // Cache le jeu
-            resetScore();
-            return true; // Stopper l'animation
+            if (player1Score === 3)
+            {
+                gameOver = true; // Empêche que cela se répète
+                document.getElementById('choix-jeu').style.display = 'block'; // Affiche la section
+                document.getElementById('choix-PONG').style.display = 'none'; // Cache le jeu
+                resetScore();
+                return true; // Stopper l'animation
+            }
+            if (player2Score === 3)
+            {
+                gameOver = true; // Empêche que cela se répète
+                document.getElementById('choix-jeu').style.display = 'block'; // Affiche la section
+                document.getElementById('choix-PONG').style.display = 'none'; // Cache le jeu
+                resetScore();
+                return true; // Stopper l'animation
+            }
         }
-        if (player2Score === 3)
+        else
         {
-            gameOver = true; // Empêche que cela se répète
-            document.getElementById('choix-jeu').style.display = 'block'; // Affiche la section
-            document.getElementById('choix-PONG').style.display = 'none'; // Cache le jeu
-            resetScore();
-            return true; // Stopper l'animation
+            if (player1Score === 3) {
+                gameOver = true;
+                document.getElementById('match-display').style.display = 'block';
+                document.getElementById('choix-PONG').style.display = 'none';
+                resetScore();
+                finishMatch(currentMatchIndex, "Player 1"); // Met à jour le gagnant
+                return true;
+            }
+            if (player2Score === 3) {
+                gameOver = true;
+                document.getElementById('match-display').style.display = 'block';
+                document.getElementById('choix-PONG').style.display = 'none';
+                resetScore();
+                finishMatch(currentMatchIndex, "Player 2"); // Met à jour le gagnant
+                return true;
+            }
         }
         return false;
     }
@@ -283,18 +307,3 @@ document.getElementById('button-startIa').addEventListener('click', () => {
     ia = true;  // Active l'IA pour le paddle droit
     initPongGame();
 });
-
-document.getElementById('play-tournois').addEventListener('click', () => {
-    // Affichez la section du jeu
-    const pongSection = document.getElementById('choix-PONG');
-    pongSection.style.display = 'block';
-  
-    // Supprimer uniquement le canvas existant, s'il existe
-    const existingCanvas = pongSection.querySelector('canvas');
-    if (existingCanvas) {
-      pongSection.removeChild(existingCanvas);
-    }
-  
-    // Démarrer le jeu en créant un nouveau canvas
-    initPongGame();
-  });

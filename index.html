@@ -76,8 +76,7 @@
     <div class="content" id="choix-tournois">
         <button onclick="showSection('choix-jeu')" id="button-retour">Retour</button>
         <h1>Tournois</h1>
-        <!-- <button onclick="showSection('choix-PONG')" id="button-startIa">Commencer</button> -->
-        
+
         <!-- Choix des joueurs -->
         <div id="player-selection">
             <h2>Choisissez vos noms</h2>
@@ -94,13 +93,13 @@
     </div>
 
     <!-- Section pour afficher les matchs -->
-    <div class="content" id="match-display">
+    <div class="content" id="match-display" style="display:none;">
         <h1>Matchs en cours</h1>
         
         <div id="match1">
             <h2>Match 1</h2>
             <p id="match1-players"></p>
-            <button onclick="showSection('choix-PONG')" id="play-tournois">Commencer</button>
+            <button id="start-match1" onclick="startPongGame(0)">Jouer</button>
         </div>
         
         <div id="match2">
@@ -113,8 +112,10 @@
             <h2>Finale</h2>
             <p id="final-players"></p>
             <button id="start-final" onclick="startPongGame(2)" style="display:none;">Jouer</button>
+            <button onclick="goBackToMenu()" style="display: none;" id="return-button">Retour</button>
         </div>
     </div>
+
 
 
      <!-- Section de Compte -->
