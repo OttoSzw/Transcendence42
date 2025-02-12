@@ -40,8 +40,8 @@ function initPongGame() {
     pongSection.appendChild(renderer.domElement);
 
     // Position de la caméra (légèrement inclinée pour une meilleure vue)
-    // camera.position.set(0, 6, 10);
-    camera.position.set(0, 10, 0);
+    camera.position.set(0, 6, 10);
+    // camera.position.set(0, 10, 0);
     camera.lookAt(0, 0, 0);
 
     // Plateau (plus large)
@@ -133,7 +133,6 @@ function initPongGame() {
     // Condition Victoire
     function checkWin()
     {
-        console.log(isTournament);
         if (isTournament == false)
         {
             if (player1Score === 3)
@@ -175,109 +174,62 @@ function initPongGame() {
         return false;
     }
 
-
-    function updateAI() {
-        // Position actuelle de la balle
+    function updateAI()
+    {
+        let currentTime = Date.now();
         let ballX = ball.position.x;
         let ballZ = ball.position.z;
-        
-        // Vitesse de la balle
         let speedX = ballVelocity.x;
         let speedZ = ballVelocity.z;
-    
-        // La position de la ligne de but sur le côté droit
-        let targetX = 6.5;  // Côté droit du terrain
-    
-        // Calculer le temps nécessaire pour que la balle atteigne x = 6.5
-        if (speedX !== 0) {
-            let timeToReachX = (targetX - ballX) / speedX;
-    
-            // Si le temps est positif, cela signifie que la balle se dirige vers la ligne de but du côté droit
-            if (timeToReachX > 0) {
-                // Calcul de la position de la balle en Z au moment où elle atteindra x = 6.5
-                let predictedZAtX = ballZ + speedZ * timeToReachX;
-    
-                // Dessiner un point rouge à l'endroit où la balle va toucher x = 6.5
-                drawRedPoint(targetX, predictedZAtX);
+        let targetX = 6.5;
+        let predictedZAtX = null;
+        let breakPoint = null;
+
+        let positionBall = paddleRight.position.z;
+        let timeToReachX = (targetX - ballX) / speedX;
+        
+        if (timeToReachX > 0 && speedX !== 0)
+        {
+            predictedZAtX = ballZ + speedZ * timeToReachX;
+            // drawRedPoint(targetX, predictedZAtX); // DEBUG pour l ia
+            if (predictedZAtX < 4.5 && predictedZAtX > -4.5)
+            {
+                breakPoint = predictedZAtX;
+                console.log(breakPoint);
             }
         }
-    }
-    
-    function drawRedPoint(x, z) {
-        // Code pour dessiner un point rouge à la position (x, z)
-        // Cela peut varier en fonction de la bibliothèque graphique que vous utilisez
-        // Exemple pour un contexte 3D avec Three.js
-        let geometry = new THREE.SphereGeometry(0.1, 32, 32); // Petite sphère
-        let material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Couleur rouge
-        let point = new THREE.Mesh(geometry, material);
-        point.position.set(x, 0, z); // Placer le point aux coordonnées x, z
-        scene.add(point); // Ajouter le point à la scène
-    }
-    
 
-    // function updateAI()
+        if (currentTime - lastIaUpdate >= 1000)
+        {
+            lastIaUpdate = currentTime;
+            if (breakPoint !== null)
+                positionBall = breakPoint;
+        }
+
+        let zone2 = 4.5 / 2;
+
+        if (breakPoint !== null) {
+            if (breakPoint > zone2) {
+                positionBall = 2.25;
+            } else if (breakPoint < -zone2) {
+                positionBall = -2.25;
+            }
+        }
+
+        if (breakPoint > paddleRight.position.z)
+            paddleRight.position.z += paddleMaxSpeed;
+        else if (breakPoint < paddleRight.position.z)
+            paddleRight.position.z -= paddleMaxSpeed;
+    }
+
+    // DEBUG IA
+    // function drawRedPoint(x, z)
     // {
-        // let currentTime = Date.now();
-    
-        // if (currentTime - lastIaUpdate >= 1000) {
-        //     lastIaUpdate = currentTime;
-        
-        //     let zone1 = 1.25;
-        //     let zone2 = 2.5;
-        //     let zone3 = 3.75;
-        //     let zone4 = 5;
-        
-        //     if (ball.position.x > 1.25)
-        //     {
-        //         if (ball.position.z > zone4) {
-        //             positionBall = 4.5; // Zone très très haute
-        //         } else if (ball.position.z > zone3) {
-        //             positionBall = 3.5; // Zone très haute
-        //         } else if (ball.position.z > zone2) {
-        //             positionBall = 2.5; // Zone haute
-        //         } else if (ball.position.z > zone1) {
-        //             positionBall = 1.5; // Zone légèrement haute
-        //         } else if (ball.position.z < -zone4) {
-        //             positionBall = -4.5; // Zone très très basse
-        //         } else if (ball.position.z < -zone3) {
-        //             positionBall = -3.5; // Zone très basse
-        //         } else if (ball.position.z < -zone2) {
-        //             positionBall = -2.5; // Zone basse
-        //         } else if (ball.position.z < -zone1) {
-        //             positionBall = -1.5; // Zone légèrement basse
-        //         } else {
-        //             positionBall = 0; // Zone centrale
-        //         }
-        //     }
-        //     else if (ball.position.x < -1.25)
-        //     {
-        //         if (ball.position.z > zone4) {
-        //             positionBall = -4.5; // Zone très très haute
-        //         } else if (ball.position.z > zone3) {
-        //             positionBall = -3.5; // Zone très haute
-        //         } else if (ball.position.z > zone2) {
-        //             positionBall = -2.5; // Zone haute
-        //         } else if (ball.position.z > zone1) {
-        //             positionBall = -1.5; // Zone légèrement haute
-        //         } else if (ball.position.z < -zone4) {
-        //             positionBall = 4.5; // Zone très très basse
-        //         } else if (ball.position.z < -zone3) {
-        //             positionBall = 3.5; // Zone très basse
-        //         } else if (ball.position.z < -zone2) {
-        //             positionBall = 2.5; // Zone basse
-        //         } else if (ball.position.z < -zone1) {
-        //             positionBall = 1.5; // Zone légèrement basse
-        //         } else {
-        //             positionBall = 0; // Zone centrale
-        //         }
-        //     }
-        // }
-        
-    
-        // if (positionBall > paddleRight.position.z)
-        //     paddleRight.position.z += paddleMaxSpeed;
-        // else if (positionBall < paddleRight.position.z)
-        //     paddleRight.position.z -= paddleMaxSpeed;
+    //     let geometry = new THREE.SphereGeometry(0.1, 32, 32);
+    //     let material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    //     let point = new THREE.Mesh(geometry, material);
+    //     point.position.set(x, 0, z);
+    //     scene.add(point);
     // }
     
 
@@ -303,7 +255,7 @@ function initPongGame() {
         // Collision avec la raquette gauche (paddleLeft)
         if (ball.position.z > paddleLeft.position.z - paddleHeight && ball.position.z < paddleLeft.position.z + paddleHeight &&
             ball.position.x > paddleLeft.position.x - paddleWidth && ball.position.x < paddleLeft.position.x + paddleWidth) {
-            let reboundFactor = 1.05;
+            let reboundFactor = 1.1;
             ballVelocity.x = -ballVelocity.x * reboundFactor;
             ballVelocity.z += paddleLeftSpeed * 0.1;
         }
@@ -311,7 +263,7 @@ function initPongGame() {
         // Collision avec la raquette droite (paddleRight)
         if (ball.position.z > paddleRight.position.z - paddleHeight && ball.position.z < paddleRight.position.z + paddleHeight &&
             ball.position.x > paddleRight.position.x - paddleWidth && ball.position.x < paddleRight.position.x + paddleWidth) {
-            let reboundFactor = 1.;
+            let reboundFactor = 1.1;
             ballVelocity.x = -ballVelocity.x * reboundFactor;
             ballVelocity.z += paddleRightSpeed * 0.1;
         }
@@ -333,7 +285,6 @@ function initPongGame() {
         if (ia)
         {
             updateAI();
-            paddleRight.position.z += paddleRightSpeed;
         }
         else
             paddleRight.position.z += paddleRightSpeed;
@@ -351,10 +302,10 @@ function initPongGame() {
         ball.position.set(0, 0.5, 0);
         
         let speed = 0.07;
-        // let randomX = (Math.random() > 0.5 ? 1 : -1) * speed;
-        // let randomZ = (Math.random() > 0.5 ? 1 : -1) * speed;
-        // ballVelocity.set(randomX, 0, randomZ);
-        ballVelocity.set(0.05, 0, 0.05);
+        let randomX = (Math.random() > 0.5 ? 1 : -1) * speed;
+        let randomZ = (Math.random() > 0.5 ? 1 : -1) * speed;
+        ballVelocity.set(randomX, 0, randomZ);
+        // ballVelocity.set(0.05, 0, 0.05);
         paddleLeft.position.set(-6.5, 0.5, 0);
         paddleRight.position.set(6.5, 0.5, 0);
     }
